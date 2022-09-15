@@ -116,6 +116,27 @@ If given, toggle all entries that start at INDENT-LEVEL."
       (yafolding-show-all)
     (yafolding-hide-all indent-level)))
 
+(defun yafolding-toggle-defun ()
+  "Toggle current defun."
+  (interactive)
+  (forward-line 1)
+  (beginning-of-defun)
+  (yafolding-toggle-element))
+
+(defun yafolding-hide-defun ()
+  "Hide current defun."
+  (interactive)
+  (forward-line 1)
+  (beginning-of-defun)
+  (yafolding-hide-element))
+
+(defun yafolding-show-defun ()
+  "Show current defun."
+  (interactive)
+  (forward-line 1)
+  (beginning-of-defun)
+  (yafolding-show-element))
+
 (defun yafolding-ellipsis ()
   "Return propertized ellipsis content."
   (concat " "
