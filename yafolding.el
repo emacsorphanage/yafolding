@@ -31,7 +31,7 @@
   :group 'applications)
 
 (defface yafolding-ellipsis-face
-  '()
+  '((t :inherit 'font-lock-comment-face))
   "Face for folded blocks"
   :group 'yafolding)
 
