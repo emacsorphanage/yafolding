@@ -145,7 +145,7 @@ If given, toggle all entries that start at INDENT-LEVEL."
   "Show yafolding information of the current position."
   (interactive)
   (message "indentation: %d, indent level: %d, ingore current line: %s, element-region: %d - %d, (L%d - L%d)"
-           (yafolding--current-indentation)
+           (current-indentation)
            (yafolding-get-indent-level)
            (yafolding-should-ignore-current-line-p)
            (car (yafolding-get-element-region))
