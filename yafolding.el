@@ -27,7 +27,6 @@
 (defgroup yafolding nil
   "Fold code blocks based on indentation level."
   :prefix "yafolding-"
-  :link '(url-link :tag "yafolding on github" "https://github.com/zenozeng/yafolding.el")
   :group 'applications)
 
 (defface yafolding-ellipsis-face '((t))
