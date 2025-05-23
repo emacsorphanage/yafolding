@@ -30,8 +30,7 @@
   :link '(url-link :tag "yafolding on github" "https://github.com/zenozeng/yafolding.el")
   :group 'applications)
 
-(defface yafolding-ellipsis-face
-  '()
+(defface yafolding-ellipsis-face '((t))
   "Face for folded blocks."
   :group 'yafolding)
 
