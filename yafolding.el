@@ -3,6 +3,7 @@
 ;; Copyright (C) 2013-2017 Zeno Zeng
 
 ;; Author: Zeno Zeng <zenoofzeng@gmail.com>
+;; Package-Requires: ((emacs "28.1"))
 ;; Keywords: folding
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -47,11 +48,8 @@
 
 (defun yafolding-get-overlays (beg end)
   "Get all overlays between BEG and END."
-  (delq nil
-        (mapcar (lambda (overlay)
-                  (and (member "yafolding" (overlay-properties overlay))
-                       overlay))
-                (overlays-in beg end))))
+  (seq-filter (lambda (ov) (member "yafolding" (overlay-properties ov)))
+              (overlays-in beg end)))
 
 (defun yafolding-should-ignore-current-line-p ()
   "Return t if the current line should be ignored."
@@ -81,7 +79,7 @@
 
 (defun yafolding-show-region (beg end)
   "Delete all yafolding overlays between BEG and END."
-  (mapcar 'delete-overlay (yafolding-get-overlays beg end)))
+  (mapcar #'delete-overlay (yafolding-get-overlays beg end)))
 
 (defun yafolding-show-all ()
   "Delete all yafolding overlays."
@@ -125,8 +123,8 @@ If given, toggle all entries that start at INDENT-LEVEL."
     (yafolding-show-region beg end)
     (let ((before-string
            (concat
-            (when yafolding-show-fringe-marks
-              (propertize " " 'display '(left-fringe right-triangle)))
+            (and yafolding-show-fringe-marks
+                 (propertize " " 'display '(left-fringe right-triangle)))
             (yafolding-ellipsis)))
           (new-overlay (make-overlay beg end)))
       (overlay-put new-overlay 'invisible t)
@@ -141,14 +139,15 @@ If given, toggle all entries that start at INDENT-LEVEL."
 (defun yafolding-debug ()
   "Show yafolding information of the current position."
   (interactive)
-  (message "indentation: %d, indent level: %d, ingore current line: %s, element-region: %d - %d, (L%d - L%d)"
-           (current-indentation)
-           (yafolding-get-indent-level)
-           (yafolding-should-ignore-current-line-p)
-           (car (yafolding-get-element-region))
-           (car (cdr (yafolding-get-element-region)))
-           (line-number-at-pos (car (yafolding-get-element-region)))
-           (line-number-at-pos (car (cdr (yafolding-get-element-region))))))
+  (pcase-let ((`(,beg ,end)) (yafolding-get-element-region))
+    (message "indentation: %d, indent level: %d, ingore current line: %s, \
+element-region: %d - %d, (L%d - L%d)"
+             (current-indentation)
+             (yafolding-get-indent-level)
+             (yafolding-should-ignore-current-line-p)
+             beg end
+             (line-number-at-pos beg)
+             (line-number-at-pos end))))
 
 (defun yafolding-get-element-region ()
   "Return (BEG END) of current element."
@@ -157,7 +156,8 @@ If given, toggle all entries that start at INDENT-LEVEL."
         (indentation (current-indentation)))
     (save-excursion
       (forward-visible-line 1)
-      (while (and (< (line-number-at-pos) (line-number-at-pos (point-max)))
+      (while (and (< (line-number-at-pos)
+                     (line-number-at-pos (point-max)))
                   (or (> (current-indentation) indentation)
                       (yafolding-should-ignore-current-line-p)))
         (unless (yafolding-should-ignore-current-line-p)
@@ -168,9 +168,7 @@ If given, toggle all entries that start at INDENT-LEVEL."
 (defun yafolding-hide-element ()
   "Hide current element."
   (interactive)
-  (let ((region (yafolding-get-element-region)))
-    (yafolding-hide-region (car region)
-                           (cadr region))))
+  (apply #'yafolding-hide-region (yafolding-get-element-region)))
 
 (defun yafolding-show-element ()
   "Show current element."
@@ -187,14 +185,16 @@ If given, toggle all entries that start at INDENT-LEVEL."
     (yafolding-hide-element)))
 
 (add-hook 'isearch-mode-hook
-          (lambda() (mapcar (lambda (overlay)
-                         (overlay-put overlay 'invisible nil))
-                       (yafolding-get-overlays (point-min) (point-max)))))
+          (lambda ()
+            (mapcar (lambda (overlay)
+                      (overlay-put overlay 'invisible nil))
+                    (yafolding-get-overlays (point-min) (point-max)))))
 
 (add-hook 'isearch-mode-end-hook
-          (lambda() (mapcar (lambda (overlay)
-                         (overlay-put overlay 'invisible t))
-                       (yafolding-get-overlays (point-min) (point-max)))))
+          (lambda ()
+            (mapcar (lambda (overlay)
+                      (overlay-put overlay 'invisible t))
+                    (yafolding-get-overlays (point-min) (point-max)))))
 
 (defun yafolding-go-parent-element ()
   "Go back to parent element."
@@ -215,7 +215,7 @@ If given, toggle all entries that start at INDENT-LEVEL."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "<C-S-return>") #'yafolding-hide-parent-element)
     (define-key map (kbd "<C-M-return>") #'yafolding-toggle-all)
-    (define-key map (kbd "<C-return>") #'yafolding-toggle-element)
+    (define-key map (kbd   "<C-return>") #'yafolding-toggle-element)
     map))
 
 ;;;###autoload
