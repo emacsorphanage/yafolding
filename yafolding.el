@@ -25,14 +25,14 @@
 ;;; Code:
 
 (defgroup yafolding nil
-  "Fold code blocks based on indentation level"
+  "Fold code blocks based on indentation level."
   :prefix "yafolding-"
   :link '(url-link :tag "yafolding on github" "https://github.com/zenozeng/yafolding.el")
   :group 'applications)
 
 (defface yafolding-ellipsis-face
   '()
-  "Face for folded blocks"
+  "Face for folded blocks."
   :group 'yafolding)
 
 (defcustom yafolding-ellipsis-content "..."
