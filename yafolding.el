@@ -48,7 +48,7 @@
 
 (defun yafolding-get-overlays (beg end)
   "Get all overlays between BEG and END."
-  (seq-filter (lambda (ov) (member "yafolding" (overlay-properties ov)))
+  (seq-filter (lambda (ov) (eq (overlay-get ov 'category) 'yafolding))
               (overlays-in beg end)))
 
 (defun yafolding-should-ignore-current-line-p ()
@@ -134,7 +134,7 @@ If given, toggle all entries that start at INDENT-LEVEL."
                    (list (lambda (overlay &rest _)
                            (delete-overlay overlay))))
       (overlay-put new-overlay 'before-string before-string)
-      (overlay-put new-overlay 'category "yafolding"))))
+      (overlay-put new-overlay 'category 'yafolding))))
 
 (defun yafolding-debug ()
   "Show yafolding information of the current position."
