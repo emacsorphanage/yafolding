@@ -40,7 +40,7 @@
   :group 'yafolding)
 
 (defcustom yafolding-show-fringe-marks t
-  "Show fold markers in the fringe?"
+  "Whether to show fold markers in the fringe."
   :tag "Show fringe marks?"
   :type 'boolean
   :group 'yafolding)
@@ -54,14 +54,14 @@
                 (overlays-in beg end))))
 
 (defun yafolding-should-ignore-current-line-p ()
-  "Return if should ignore current line."
+  "Return t if the current line should be ignored."
   (string-match-p "^[ \t]*$"
                   (buffer-substring-no-properties
                    (line-beginning-position)
                    (line-end-position))))
 
 (defun yafolding-get-indent-level ()
-  "Get the indent level of current line."
+  "Get the indent level of the current line."
   (interactive)
   (if (and (yafolding-should-ignore-current-line-p)
            (< (line-number-at-pos) (line-number-at-pos (point-max))))
@@ -151,7 +151,7 @@ If given, toggle all entries that start at INDENT-LEVEL."
            (line-number-at-pos (car (cdr (yafolding-get-element-region))))))
 
 (defun yafolding-get-element-region ()
-  "Get '(beg end) of current element."
+  "Return (BEG END) of current element."
   (let ((beg (line-end-position))
         (end (line-end-position))
         (indentation (current-indentation)))
