@@ -1,4 +1,4 @@
-;;; yafolding.el --- Folding code blocks based on indentation
+;;; yafolding.el --- Folding code blocks based on indentation  -*- lexical-binding:t -*-
 
 ;; Copyright (C) 2013-2017 Zeno Zeng
 
@@ -133,7 +133,7 @@ If given, toggle all entries that start at INDENT-LEVEL."
       (overlay-put new-overlay 'intangible t)
       (overlay-put new-overlay 'evaporate t)
       (overlay-put new-overlay 'modification-hooks
-                   (list (lambda (overlay &optional a b c d)
+                   (list (lambda (overlay &rest _)
                            (delete-overlay overlay))))
       (overlay-put new-overlay 'before-string before-string)
       (overlay-put new-overlay 'category "yafolding"))))
