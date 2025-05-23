@@ -159,13 +159,13 @@ If given, toggle all entries that start at INDENT-LEVEL."
         (end (line-end-position))
         (indentation (current-indentation)))
     (save-excursion
-      (next-line)
+      (forward-visible-line 1)
       (while (and (< (line-number-at-pos) (line-number-at-pos (point-max)))
                   (or (> (current-indentation) indentation)
                       (yafolding-should-ignore-current-line-p)))
         (unless (yafolding-should-ignore-current-line-p)
           (setq end (line-end-position)))
-        (next-line))) ; using next-line instead of forward-line, for issue#23
+        (forward-visible-line 1)))
     (list beg end)))
 
 (defun yafolding-hide-element ()
