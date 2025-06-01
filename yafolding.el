@@ -3,6 +3,7 @@
 ;; Copyright (C) 2013-2017 Zeno Zeng
 
 ;; Author: Zeno Zeng <zenoofzeng@gmail.com>
+;; Package-Version: 0.4.2
 ;; Package-Requires: ((emacs "28.1"))
 ;; Keywords: folding
 
